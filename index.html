@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة إدارة المشاريع | شركة سمو العقارية</title>
+    <title>بوابة إدارة المشاريع والعقود | شركة سمو العقارية</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- مكتبة قراءة ملفات Excel تلقائياً -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
-            /* الألوان المعتمدة للهوية */
-            --bg-dark: #141214;          /* الأسود الفاخر/الفحم الداكن */
-            --gold-primary: #A39263;     /* الذهبي الأساسي 1 */
-            --gold-dark: #A39161;        /* الذهبي الأساسي 2 */
-            --gold-light: #B4A583;       /* الذهبي الفاتح / الرملي */
-            --text-white: #FFFFFF;       /* الأبيض */
-            --pure-black: #000000;       /* الأسود الصريح */
-            
-            /* ألوان المكونات الداخلية المشتقة */
-            --card-bg: #1c1a1c;          /* خلفية الكروت المتناسقة مع الأسود الداكن */
-            --sidebar-bg: #0d0c0d;       /* خلفية القائمة الجانبية عميقة */
-            --border-color: #A39161;     /* حدود بلون الذهبي الداكن */
+            --bg-dark: #141214;
+            --gold-primary: #A39263;
+            --gold-dark: #A39161;
+            --gold-light: #B4A583;
+            --text-white: #FFFFFF;
+            --pure-black: #000000;
+            --card-bg: #1c1a1c;
+            --sidebar-bg: #0d0c0d;
+            --border-color: #A39161;
             --sidebar-width: 280px;
         }
 
@@ -50,7 +49,6 @@
             z-index: 100;
             box-shadow: -4px 0 15px rgba(0,0,0,0.5);
             border-left: 1px solid rgba(163, 145, 97, 0.2);
-            transition: all 0.3s ease;
         }
 
         .sidebar-header {
@@ -64,37 +62,12 @@
             color: var(--gold-primary);
             font-size: 1.3rem;
             margin-bottom: 5px;
-            letter-spacing: 0.5px;
         }
 
         .sidebar-header p {
             font-size: 0.85rem;
             color: var(--gold-light);
             margin-bottom: 12px;
-        }
-
-        /* زر إضافة قسم جديد داخل السايدبار */
-        .btn-add-section {
-            width: 100%;
-            background: transparent;
-            color: var(--gold-primary);
-            border: 1px dashed var(--gold-primary);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-add-section:hover {
-            background: rgba(163, 146, 99, 0.15);
-            color: var(--text-white);
-            border-style: solid;
         }
 
         .sidebar-menu {
@@ -110,7 +83,6 @@
             gap: 12px;
             padding: 12px 15px;
             color: var(--gold-light);
-            text-decoration: none;
             border-radius: 8px;
             margin-bottom: 6px;
             cursor: pointer;
@@ -137,10 +109,10 @@
             padding: 30px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
         }
 
-        /* شريط البحث العلوي وبجانبه زر الإضافة الخاص بالقسم */
+        /* شريط التحكم العلوي */
         .top-bar {
             background: var(--card-bg);
             padding: 15px 25px;
@@ -150,190 +122,125 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        .search-box {
-            position: relative;
-            flex: 1;
-            max-width: 600px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 45px 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s ease;
-            background: var(--bg-dark);
-            color: var(--text-white);
-        }
-
-        .search-box input::placeholder {
-            color: var(--gold-light);
-            opacity: 0.7;
-        }
-
-        .search-box input:focus {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 0 3px rgba(163, 146, 99, 0.25);
-        }
-
-        .search-box i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gold-light);
-            font-size: 1.1rem;
-        }
-
-        /* زر إضافة مستند جديد بالقسم */
-        .btn-add-doc {
-            background: var(--gold-primary);
-            color: var(--pure-black);
-            border: 1px solid var(--gold-dark);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .btn-add-doc:hover {
-            background: var(--gold-light);
-            box-shadow: 0 2px 8px rgba(163, 146, 99, 0.4);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            color: var(--text-white);
+        .project-select-container {
             display: flex;
             align-items: center;
             gap: 10px;
-            border-bottom: 2px solid var(--gold-dark);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
         }
 
-        /* كروت المستندات والملفات */
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .file-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(163, 145, 97, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        .file-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(163, 146, 99, 0.15);
-            border-color: var(--gold-primary);
-        }
-
-        .file-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .file-icon {
-            width: 45px;
-            height: 45px;
-            background: rgba(163, 146, 99, 0.1);
-            color: var(--gold-primary);
-            border: 1px solid var(--gold-dark);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            flex-shrink: 0;
-        }
-
-        .file-info h4 {
-            font-size: 1rem;
-            color: var(--text-white);
-            margin-bottom: 6px;
-        }
-
-        .file-info span {
-            font-size: 0.8rem;
+        .project-select-container label {
             color: var(--gold-light);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 3px 10px;
-            border-radius: 4px;
-            border: 1px solid rgba(180, 165, 131, 0.2);
+            font-weight: bold;
+            font-size: 0.95rem;
         }
 
-        /* زر المعاينة */
-        .btn-view {
+        .project-select {
+            background: var(--bg-dark);
+            color: var(--text-white);
+            border: 1px solid var(--gold-primary);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 220px;
+        }
+
+        .excel-upload-btn {
+            background: #1D6F42; /* لون الإكسل الشهير */
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
-            background: var(--gold-light);
-            color: var(--pure-black);
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            width: 100%;
-            border: 1px solid var(--gold-primary);
+            border: none;
+            transition: all 0.2s;
         }
 
-        .btn-view:hover {
+        .excel-upload-btn:hover {
+            background: #155231;
+        }
+
+        #excelInput {
+            display: none;
+        }
+
+        /* تصميم الجدول المقتبس من المرفق */
+        .section-header-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--gold-primary);
+            padding-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .section-header-title h3 {
+            color: var(--gold-primary);
+            font-size: 1.4rem;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .contracts-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .contracts-table th {
             background: var(--gold-primary);
             color: var(--pure-black);
-            box-shadow: 0 2px 8px rgba(163, 146, 99, 0.4);
+            padding: 14px 10px;
+            font-weight: bold;
+            border: 1px solid var(--gold-dark);
+            white-space: nowrap;
         }
 
-        /* رسالة عدم وجود نتائج */
-        .no-results {
-            text-align: center;
-            padding: 40px;
+        .contracts-table td {
+            padding: 12px 10px;
+            border: 1px solid rgba(163, 145, 97, 0.2);
+            color: var(--text-white);
+        }
+
+        .contracts-table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .contracts-table tbody tr:hover {
+            background-color: rgba(163, 146, 99, 0.1);
+        }
+
+        .contract-link {
+            color: #64B5F6; /* لون أزرق مميز للروابط كما بالمرفق */
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .contract-link:hover {
             color: var(--gold-light);
-            grid-column: 1 / -1;
         }
 
         @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            .sidebar-header h2, .sidebar-header p, .btn-add-section span, .menu-item span {
-                display: none;
-            }
-            .main-content {
-                margin-right: 70px;
-                padding: 15px;
-            }
-            .top-bar {
-                flex-direction: column;
-            }
-            .btn-add-doc {
-                width: 100%;
-                justify-content: center;
-            }
+            .sidebar { width: 70px; }
+            .sidebar-header h2, .sidebar-header p, .menu-item span { display: none; }
+            .main-content { margin-right: 70px; padding: 15px; }
         }
     </style>
 </head>
@@ -344,55 +251,23 @@
         <div class="sidebar-header">
             <h2>سمو العقارية</h2>
             <p>منصة إدارة المشاريع</p>
-            <button class="btn-add-section" onclick="addNewSection()">
-                <i class="fa-solid fa-folder-plus"></i>
-                <span>إضافة قسم جديد</span>
-            </button>
         </div>
-        <ul class="sidebar-menu" id="sidebarMenu">
-            <li class="menu-item active" onclick="filterSection('all', this)">
-                <i class="fa-solid fa-border-all"></i>
-                <span>جميع الأقسام</span>
-            </li>
-            <li class="menu-item" onclick="filterSection('contracts', this)">
+        <ul class="sidebar-menu">
+            <li class="menu-item active">
                 <i class="fa-solid fa-file-contract"></i>
-                <span>العقود</span>
+                <span>قسم العقود</span>
             </li>
-            <li class="menu-item" onclick="filterSection('invoices', this)">
+            <li class="menu-item">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 <span>المستخلصات</span>
             </li>
-            <li class="menu-item" onclick="filterSection('analysis', this)">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>التحليل الفني والمالي</span>
-            </li>
-            <li class="menu-item" onclick="filterSection('wafi', this)">
-                <i class="fa-solid fa-certificate"></i>
-                <span>رخص البيع على الخارطة</span>
-            </li>
-            <li class="menu-item" onclick="filterSection('masterplan', this)">
-                <i class="fa-solid fa-map-location-dot"></i>
-                <span>المخطط العام المعتمد</span>
-            </li>
-            <li class="menu-item" onclick="filterSection('bank_guarantees', this)">
+            <li class="menu-item">
                 <i class="fa-solid fa-building-columns"></i>
                 <span>الضمانات البنكية</span>
             </li>
-            <li class="menu-item" onclick="filterSection('title_deeds', this)">
+            <li class="menu-item">
                 <i class="fa-solid fa-scroll"></i>
                 <span>صكوك المشاريع</span>
-            </li>
-            <li class="menu-item" onclick="filterSection('monthly_reports', this)">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span>التقارير الشهرية</span>
-            </li>
-            <li class="menu-item" onclick="filterSection('executive_summary', this)">
-                <i class="fa-solid fa-clipboard-list"></i>
-                <span>الملخص التنفيذي</span>
-            </li>
-            <li class="menu-item" onclick="filterSection('progress', this)">
-                <i class="fa-solid fa-bars-progress"></i>
-                <span>نسب الإنجاز الشهرية</span>
             </li>
         </ul>
     </aside>
@@ -400,176 +275,170 @@
     <!-- المحتوى الرئيسي -->
     <main class="main-content">
         
-        <!-- شريط البحث العلوي وزر إضافة المستند للقسم -->
+        <!-- شريط التصفية ورفع شيت الإكسل -->
         <header class="top-bar">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" onkeyup="searchFiles()" placeholder="ابحث عن عقد، مستخلص، ضمان، صك، تقرير...">
+            <!-- اختيار المشروع بناءً على شيتات الإكسل -->
+            <div class="project-select-container">
+                <label for="projectSelect"><i class="fa-solid fa-building"></i> المشروع:</label>
+                <select id="projectSelect" class="project-select" onchange="changeProject(this.value)">
+                    <!-- يتم استبدال الاختيارات آلياً عند رفع الملف -->
+                </select>
             </div>
-            <button class="btn-add-doc" id="addDocBtn" onclick="addNewDocument()">
-                <i class="fa-solid fa-plus"></i>
-                <span id="addDocBtnText">إضافة مستند جديد</span>
-            </button>
+
+            <!-- زر رفع ملف Excel المباشر -->
+            <label for="excelInput" class="excel-upload-btn">
+                <i class="fa-solid fa-file-excel"></i>
+                رفع ملف Excel الشامل
+            </label>
+            <input type="file" id="excelInput" accept=".xlsx, .xls" onchange="handleExcelUpload(event)">
         </header>
 
-        <!-- عنوان القسم والمحتوى -->
-        <section>
-            <h3 class="section-title" id="currentSectionTitle">
-                <i class="fa-solid fa-folder-open" style="color: var(--gold-primary);"></i>
-                جميع الملفات والمستندات
-            </h3>
+        <!-- عنوان الهيدر كالمرفق -->
+        <div class="section-header-title">
+            <h3 id="projectDisplayTitle">مشروع أريب سمو ريزيدنس</h3>
+            <span style="color: var(--gold-light); font-size: 0.9rem;"><i class="fa-solid fa-list-check"></i> جدول بيانات العقود</span>
+        </div>
 
-            <div class="files-grid" id="filesGrid">
-                <!-- يتم توليد الملفات والروابط ديناميكياً -->
-            </div>
-        </section>
+        <!-- جدول العقود المطابق تماماً لتصميم الصورة المرفقة -->
+        <div class="table-responsive">
+            <table class="contracts-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">*</th>
+                        <th>الموضوع</th>
+                        <th>الطرف الأول</th>
+                        <th>الطرف الثاني</th>
+                        <th>مدة العقد</th>
+                        <th>ملاحظات</th>
+                        <th>تاريخ التوقيع</th>
+                    </tr>
+                </thead>
+                <tbody id="contractsTableBody">
+                    <!-- يتم عرض البيانات هنا تفاعلياً -->
+                </tbody>
+            </table>
+        </div>
 
     </main>
 
     <script>
-        // قاعدة بيانات جميع الأقسام والملفات الخاصة بك
-        const allFiles = [
-            // العقود
-            { name: "عقد المقاول الرئيسي - مشروع المجمع السكني", category: "contracts", categoryName: "العقود", icon: "fa-file-contract", link: "#" },
-            { name: "عقد الاستشاري الهندسي العام", category: "contracts", categoryName: "العقود", icon: "fa-file-contract", link: "#" },
-            
-            // المستخلصات
-            { name: "مستخلص رقم (12) - الأعمال الإنشائية", category: "invoices", categoryName: "المستخلصات", icon: "fa-file-invoice-dollar", link: "#" },
-            { name: "دفعة الأعمال الكهروميكانيكية - المستخلص 05", category: "invoices", categoryName: "المستخلصات", icon: "fa-file-invoice-dollar", link: "#" },
-            
-            // التحليل الفني والمالي
-            { name: "دراسة الجدوى المالية المحدثة للمشروع", category: "analysis", categoryName: "التحليل الفني والمالي", icon: "fa-chart-line", link: "#" },
-            { name: "تقرير التدفقات النقدية والتكاليف المباشرة", category: "analysis", categoryName: "التحليل الفني والمالي", icon: "fa-chart-line", link: "#" },
-            
-            // رخص البيع على الخارطة
-            { name: "رخصة وافي النهائية - رقم الرخصة 1042", category: "wafi", categoryName: "رخص البيع على الخارطة", icon: "fa-certificate", link: "#" },
-            { name: "شهادة فتح حساب الإسكان والضمان", category: "wafi", categoryName: "رخص البيع على الخارطة", icon: "fa-certificate", link: "#" },
-            
-            // المخطط العام المعتمد
-            { name: "المخطط المعماري المعتمد - النسخة النهائية", category: "masterplan", categoryName: "المخطط العام المعتمد", icon: "fa-map-location-dot", link: "#" },
-            { name: "اعتماد أمانة المنطقة والمرافق العامة", category: "masterplan", categoryName: "المخطط العام المعتمد", icon: "fa-map-location-dot", link: "#" },
-            
-            // الضمانات البنكية (جديد)
-            { name: "ضمان دفعة مقدمة - مصرف الراجحي", category: "bank_guarantees", categoryName: "الضمانات البنكية", icon: "fa-building-columns", link: "#" },
-            { name: "خطاب ضمان نهائي - البنك الأهلي السعودي", category: "bank_guarantees", categoryName: "الضمانات البنكية", icon: "fa-building-columns", link: "#" },
-
-            // صكوك المشاريع (جديد)
-            { name: "الصك الإلكتروني الموحد - أرض المجمع التجاري", category: "title_deeds", categoryName: "صكوك المشاريع", icon: "fa-scroll", link: "#" },
-            { name: "صك تحديث المساحات والمخطط المعتمد", category: "title_deeds", categoryName: "صكوك المشاريع", icon: "fa-scroll", link: "#" },
-
-            // التقارير الشهرية
-            { name: "التقرير الميداني الشامل - شهر يوليو 2026", category: "monthly_reports", categoryName: "التقارير الشهرية", icon: "fa-calendar-check", link: "#" },
-            { name: "تقرير تقييم المخاطر والجودة - يونيو 2026", category: "monthly_reports", categoryName: "التقارير الشهرية", icon: "fa-calendar-check", link: "#" },
-            
-            // الملخص التنفيذي
-            { name: "عرض الإدارة العليا والقيادة - الربع الثاني", category: "executive_summary", categoryName: "الملخص التنفيذي", icon: "fa-clipboard-list", link: "#" },
-            
-            // نسب الإنجاز الشهرية
-            { name: "منحنى تقدم الأعمال الميدانية (S-Curve)", category: "progress", categoryName: "نسب الإنجاز الشهرية", icon: "fa-bars-progress", link: "#" }
-        ];
-
-        let currentCategory = 'all';
-
-        // عناوين الأقسام التوضيحية
-        const titles = {
-            all: "جميع الملفات والمستندات",
-            contracts: "قسم العقود",
-            invoices: "قسم المستخلصات المالية",
-            analysis: "التحليل الفني والمالي",
-            wafi: "رخص البيع على الخارطة (وافي)",
-            masterplan: "المخطط العام المعتمد",
-            bank_guarantees: "قسم الضمانات البنكية",
-            title_deeds: "قسم صكوك المشاريع",
-            monthly_reports: "التقارير الشهرية",
-            executive_summary: "الملخص التنفيذي",
-            progress: "نسب الإنجاز الشهرية"
+        // بيانات افتراضية أولية (مطابقة للصورة المرفقة تماماً)
+        let projectsData = {
+            "مشروع أريب سمو ريزيدنس": [
+                { id: 1, subject: "عقد تطوير وتصميم وتنفيذ وإدارة التسويق والبيع", link: "#", party1: "شركة أريب المتطورة العقارية", party2: "شركة سمو العقارية", duration: "39 شهر", notes: "من تاريخ توقيع العقد", signDate: "2026" },
+                { id: 2, subject: "عقد تصميم وتنفيذ أعمال تطوير مشروع أريب سمو ريزيدنس", link: "#", party1: "شركة سمو العقارية", party2: "شركة بنى الخليج للمقاولات", duration: "30 شهر", notes: "من تاريخ محضر تسليم الموقع للمقاول", signDate: "2026" },
+                { id: 3, subject: "اتفاقية اشراف هندسي", link: "#", party1: "شركة أريب المتطورة العقارية", party2: "شركة مجموعة العمرو للاستشارات الهندسية", duration: "48 شهر", notes: "من صدور ترخيص البيع على الخارطة", signDate: "2024" }
+            ],
+            "مشروع ضاحية الفرسان": [
+                { id: 1, subject: "عقد البنية التحتية والأسفلت", link: "#", party1: "شركة سمو العقارية", party2: "شركة مقاولات الطرق", duration: "12 شهر", notes: "مباشر بعد الاعتماد", signDate: "2025" }
+            ]
         };
 
-        // عرض الملفات حسب القسم المحدد
-        function renderFiles(files) {
-            const grid = document.getElementById('filesGrid');
-            grid.innerHTML = '';
+        let currentProjectName = "مشروع أريب سمو ريزيدنس";
 
-            if (files.length === 0) {
-                grid.innerHTML = '<div class="no-results"><i class="fa-solid fa-magnifying-glass" style="font-size:2rem; margin-bottom:10px;"></i><p>لا توجد نتائج مطابقة للبحث</p></div>';
+        // 1. القراءة التلقائية لملف Excel عند رفعه من الجهاز
+        function handleExcelUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                let newProjectsData = {};
+
+                // قراءة كل شيت داخل الـ Excel على أنه (مشروع)
+                workbook.SheetNames.forEach(sheetName => {
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    // استخراج الصفوف مع تخطي هيدر الجدول (Row 0)
+                    let contractsList = [];
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (row && row.length > 0) {
+                            contractsList.push({
+                                id: row[0] || i,
+                                subject: row[1] || "",
+                                link: row[7] || "#", // يمكن وضع رابط الملف في العمود رقم 8 مثلاً
+                                party1: row[2] || "",
+                                party2: row[3] || "",
+                                duration: row[4] || "",
+                                notes: row[5] || "",
+                                signDate: row[6] || ""
+                            });
+                        }
+                    }
+                    if (contractsList.length > 0) {
+                        newProjectsData[sheetName] = contractsList;
+                    }
+                });
+
+                if (Object.keys(newProjectsData).length > 0) {
+                    projectsData = newProjectsData;
+                    populateProjectDropdown();
+                    alert("تم قراءة واستيراد جميع شيتات المشاريع والعقود بنجاح!");
+                } else {
+                    alert("تعذر قراءة بيانات الجدول من الشيتات، برجاء التأكد من التنسيق.");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 2. تعبئة قائمة اختيار المشاريع
+        function populateProjectDropdown() {
+            const select = document.getElementById('projectSelect');
+            select.innerHTML = '';
+            
+            const projectNames = Object.keys(projectsData);
+            projectNames.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+
+            if (projectNames.length > 0) {
+                changeProject(projectNames[0]);
+            }
+        }
+
+        // 3. تغيير عرض الجدول حسب المشروع المختار
+        function changeProject(projectName) {
+            currentProjectName = projectName;
+            document.getElementById('projectDisplayTitle').innerText = projectName;
+            
+            const contracts = projectsData[projectName] || [];
+            const tbody = document.getElementById('contractsTableBody');
+            tbody.innerHTML = '';
+
+            if (contracts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="padding:20px; color:var(--gold-light);">لا توجد عقود مسجلة لهذا المشروع</td></tr>`;
                 return;
             }
 
-            files.forEach(file => {
-                const card = document.createElement('div');
-                card.className = 'file-card';
-                card.innerHTML = `
-                    <div class="file-header">
-                        <div class="file-icon">
-                            <i class="fa-solid ${file.icon}"></i>
-                        </div>
-                        <div class="file-info">
-                            <h4>${file.name}</h4>
-                            <span>${file.categoryName}</span>
-                        </div>
-                    </div>
-                    <a href="${file.link}" target="_blank" class="btn-view">
-                        عرض المستند
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
+            contracts.forEach((contract, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:bold; color:var(--gold-primary);">${contract.id || (index + 1)}</td>
+                    <td style="text-align: right;">
+                        <a href="${contract.link}" target="_blank" class="contract-link">
+                            ${contract.subject}
+                        </a>
+                    </td>
+                    <td>${contract.party1}</td>
+                    <td>${contract.party2}</td>
+                    <td>${contract.duration}</td>
+                    <td style="color:${contract.notes.includes('محضر') ? '#64B5F6' : 'inherit'}">${contract.notes}</td>
+                    <td>${contract.signDate}</td>
                 `;
-                grid.appendChild(card);
+                tbody.appendChild(tr);
             });
         }
 
-        // تصفية الأقسام من القائمة الجانبية
-        function filterSection(category, element) {
-            currentCategory = category;
-            
-            // تحديث التحديد على المنيو
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            if(element) element.classList.add('active');
-
-            // تحديث العنوان الرئيسي
-            const sectionName = titles[category] || category;
-            document.getElementById('currentSectionTitle').innerHTML = `<i class="fa-solid fa-folder-open" style="color: var(--gold-primary);"></i> ${sectionName}`;
-
-            // تحديث نص زر الإضافة في الأعلى
-            const btnText = category === 'all' ? 'إضافة مستند جديد' : `إضافة إلى ${sectionName}`;
-            document.getElementById('addDocBtnText').innerText = btnText;
-
-            // تصفية القائمة
-            const filtered = category === 'all' ? allFiles : allFiles.filter(f => f.category === category);
-            renderFiles(filtered);
-
-            // تفريغ محرك البحث عند تغيير القسم
-            document.getElementById('searchInput').value = '';
-        }
-
-        // محرك البحث الفوري
-        function searchFiles() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            const activeSet = currentCategory === 'all' ? allFiles : allFiles.filter(f => f.category === currentCategory);
-
-            const searchResults = activeSet.filter(file => 
-                file.name.toLowerCase().includes(query) || 
-                file.categoryName.toLowerCase().includes(query)
-            );
-
-            renderFiles(searchResults);
-        }
-
-        // دالة إضافة قسم جديد
-        function addNewSection() {
-            const sectionName = prompt("أدخل اسم القسم الجديد:");
-            if (sectionName && sectionName.trim() !== "") {
-                alert(`تم إنشاء قسم: (${sectionName.trim()}) بنجاح.`);
-            }
-        }
-
-        // دالة إضافة مستند جديد بالقسم الحركي
-        function addNewDocument() {
-            const currentSectionName = titles[currentCategory] || "القسم الحالي";
-            alert(`نافذة رفع/إضافة مستند جديد إلى [ ${currentSectionName} ]`);
-        }
-
         // التشغيل المبدئي عند فتح الصفحة
-        renderFiles(allFiles);
+        populateProjectDropdown();
     </script>
 </body>
 </html>
