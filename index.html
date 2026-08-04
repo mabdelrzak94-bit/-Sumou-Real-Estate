@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة إدارة المشاريع والعقود | شركة سمو العقارية</title>
+    <title>بوابة إدارة المشاريع | شركة سمو العقارية</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- مكتبة قراءة ملفات Excel تلقائياً -->
+    <!-- مكتبة قراءة ملفات Excel وقراءة الخلايا المدموجة Merge Cells -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -67,7 +67,7 @@
         .sidebar-header p {
             font-size: 0.85rem;
             color: var(--gold-light);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .sidebar-menu {
@@ -151,7 +151,7 @@
         }
 
         .excel-upload-btn {
-            background: #1D6F42; /* لون الإكسل الشهير */
+            background: #1D6F42;
             color: #fff;
             padding: 10px 18px;
             border-radius: 8px;
@@ -172,7 +172,6 @@
             display: none;
         }
 
-        /* تصميم الجدول المقتبس من المرفق */
         .section-header-title {
             display: flex;
             align-items: center;
@@ -187,6 +186,7 @@
             font-size: 1.4rem;
         }
 
+        /* تصميم الجدول للبيانات والدمج */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -194,46 +194,35 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            padding: 10px;
         }
 
-        .contracts-table {
+        .excel-table {
             width: 100%;
             border-collapse: collapse;
             text-align: center;
             font-size: 0.95rem;
         }
 
-        .contracts-table th {
+        .excel-table th, .excel-table td {
+            border: 1px solid rgba(163, 145, 97, 0.3);
+            padding: 12px 10px;
+            color: var(--text-white);
+            vertical-align: middle;
+        }
+
+        .excel-table tr:first-child td, .excel-table tr:first-child th {
             background: var(--gold-primary);
             color: var(--pure-black);
-            padding: 14px 10px;
             font-weight: bold;
-            border: 1px solid var(--gold-dark);
-            white-space: nowrap;
         }
 
-        .contracts-table td {
-            padding: 12px 10px;
-            border: 1px solid rgba(163, 145, 97, 0.2);
-            color: var(--text-white);
-        }
-
-        .contracts-table tbody tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        .contracts-table tbody tr:hover {
-            background-color: rgba(163, 146, 99, 0.1);
-        }
-
-        .contract-link {
-            color: #64B5F6; /* لون أزرق مميز للروابط كما بالمرفق */
+        .excel-table a {
+            color: #64B5F6;
             text-decoration: underline;
-            cursor: pointer;
-            font-weight: 500;
         }
 
-        .contract-link:hover {
+        .excel-table a:hover {
             color: var(--gold-light);
         }
 
@@ -246,28 +235,40 @@
 </head>
 <body>
 
-    <!-- القائمة الجانبية Sidebar -->
+    <!-- القائمة الجانبية مع الأقسام الكاملة -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <h2>سمو العقارية</h2>
             <p>منصة إدارة المشاريع</p>
         </div>
         <ul class="sidebar-menu">
-            <li class="menu-item active">
+            <li class="menu-item active" onclick="switchSection('contracts', 'قسم العقود', this)">
                 <i class="fa-solid fa-file-contract"></i>
                 <span>قسم العقود</span>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" onclick="switchSection('invoices', 'قسم المستخلصات', this)">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 <span>المستخلصات</span>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" onclick="switchSection('bank_guarantees', 'الضمانات البنكية', this)">
                 <i class="fa-solid fa-building-columns"></i>
                 <span>الضمانات البنكية</span>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" onclick="switchSection('title_deeds', 'صكوك المشاريع', this)">
                 <i class="fa-solid fa-scroll"></i>
                 <span>صكوك المشاريع</span>
+            </li>
+            <li class="menu-item" onclick="switchSection('wafi', 'رخص البيع على الخارطة', this)">
+                <i class="fa-solid fa-certificate"></i>
+                <span>رخص البيع على الخارطة</span>
+            </li>
+            <li class="menu-item" onclick="switchSection('masterplan', 'المخطط العام المعتمد', this)">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>المخطط العام المعتمد</span>
+            </li>
+            <li class="menu-item" onclick="switchSection('reports', 'التقارير والملخصات', this)">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>التقارير والملخصات</span>
             </li>
         </ul>
     </aside>
@@ -275,170 +276,151 @@
     <!-- المحتوى الرئيسي -->
     <main class="main-content">
         
-        <!-- شريط التصفية ورفع شيت الإكسل -->
+        <!-- شريط التحكم العلوي -->
         <header class="top-bar">
-            <!-- اختيار المشروع بناءً على شيتات الإكسل -->
+            <!-- قائمة تصفية الشيتات / المشاريع داخل القسم -->
             <div class="project-select-container">
-                <label for="projectSelect"><i class="fa-solid fa-building"></i> المشروع:</label>
-                <select id="projectSelect" class="project-select" onchange="changeProject(this.value)">
-                    <!-- يتم استبدال الاختيارات آلياً عند رفع الملف -->
+                <label for="projectSelect"><i class="fa-solid fa-building"></i> المشروع / الشيت:</label>
+                <select id="projectSelect" class="project-select" onchange="renderCurrentSheet(this.value)">
+                    <option value="">-- يرجى رفع ملف Excel للقسم --</option>
                 </select>
             </div>
 
-            <!-- زر رفع ملف Excel المباشر -->
+            <!-- زر رفع شيت الإكسل المخصص للقسم الحالي -->
             <label for="excelInput" class="excel-upload-btn">
                 <i class="fa-solid fa-file-excel"></i>
-                رفع ملف Excel الشامل
+                <span id="uploadBtnText">رفع Excel لقسم العقود</span>
             </label>
-            <input type="file" id="excelInput" accept=".xlsx, .xls" onchange="handleExcelUpload(event)">
+            <input type="file" id="excelInput" accept=".xlsx, .xls" onchange="handleSectionExcelUpload(event)">
         </header>
 
-        <!-- عنوان الهيدر كالمرفق -->
+        <!-- الهيدر الخاص بالقسم والمشروع -->
         <div class="section-header-title">
-            <h3 id="projectDisplayTitle">مشروع أريب سمو ريزيدنس</h3>
-            <span style="color: var(--gold-light); font-size: 0.9rem;"><i class="fa-solid fa-list-check"></i> جدول بيانات العقود</span>
+            <h3 id="currentSectionDisplayTitle">قسم العقود</h3>
+            <span id="currentProjectSubtitle" style="color: var(--gold-light); font-size: 0.9rem;"><i class="fa-solid fa-table"></i> لعرض البيانات قم برفع شيت Excel الخاص بالقسم</span>
         </div>
 
-        <!-- جدول العقود المطابق تماماً لتصميم الصورة المرفقة -->
-        <div class="table-responsive">
-            <table class="contracts-table">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">*</th>
-                        <th>الموضوع</th>
-                        <th>الطرف الأول</th>
-                        <th>الطرف الثاني</th>
-                        <th>مدة العقد</th>
-                        <th>ملاحظات</th>
-                        <th>تاريخ التوقيع</th>
-                    </tr>
-                </thead>
-                <tbody id="contractsTableBody">
-                    <!-- يتم عرض البيانات هنا تفاعلياً -->
-                </tbody>
-            </table>
+        <!-- جدول Excel مع تحويل المرج والدمج تلقائياً HTML -->
+        <div class="table-responsive" id="tableContainer">
+            <div style="text-align: center; padding: 40px; color: var(--gold-light);">
+                <i class="fa-solid fa-file-excel" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                <p>يرجى اختيار ملف Excel للرفع، وسيتم بناء الجدول والدمج تلقائياً بنفس نسق الشيتات.</p>
+            </div>
         </div>
 
     </main>
 
     <script>
-        // بيانات افتراضية أولية (مطابقة للصورة المرفقة تماماً)
-        let projectsData = {
-            "مشروع أريب سمو ريزيدنس": [
-                { id: 1, subject: "عقد تطوير وتصميم وتنفيذ وإدارة التسويق والبيع", link: "#", party1: "شركة أريب المتطورة العقارية", party2: "شركة سمو العقارية", duration: "39 شهر", notes: "من تاريخ توقيع العقد", signDate: "2026" },
-                { id: 2, subject: "عقد تصميم وتنفيذ أعمال تطوير مشروع أريب سمو ريزيدنس", link: "#", party1: "شركة سمو العقارية", party2: "شركة بنى الخليج للمقاولات", duration: "30 شهر", notes: "من تاريخ محضر تسليم الموقع للمقاول", signDate: "2026" },
-                { id: 3, subject: "اتفاقية اشراف هندسي", link: "#", party1: "شركة أريب المتطورة العقارية", party2: "شركة مجموعة العمرو للاستشارات الهندسية", duration: "48 شهر", notes: "من صدور ترخيص البيع على الخارطة", signDate: "2024" }
-            ],
-            "مشروع ضاحية الفرسان": [
-                { id: 1, subject: "عقد البنية التحتية والأسفلت", link: "#", party1: "شركة سمو العقارية", party2: "شركة مقاولات الطرق", duration: "12 شهر", notes: "مباشر بعد الاعتماد", signDate: "2025" }
-            ]
+        // تخزين بيانات الملفات المرفوعة لكل قسم على حدة
+        let sectionDataStore = {
+            contracts: null,
+            invoices: null,
+            bank_guarantees: null,
+            title_deeds: null,
+            wafi: null,
+            masterplan: null,
+            reports: null
         };
 
-        let currentProjectName = "مشروع أريب سمو ريزيدنس";
+        let currentSectionKey = 'contracts';
+        let currentSectionName = 'قسم العقود';
 
-        // 1. القراءة التلقائية لملف Excel عند رفعه من الجهاز
-        function handleExcelUpload(event) {
+        // التنقل بين الأقسام الجانبية
+        function switchSection(key, name, element) {
+            currentSectionKey = key;
+            currentSectionName = name;
+
+            // تحديث التحديد في المنيو الجانبي
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            // تحديث العناوين والأزرار
+            document.getElementById('currentSectionDisplayTitle').innerText = name;
+            document.getElementById('uploadBtnText').innerText = `رفع Excel لـ (${name})`;
+
+            // تحديث القائمة المنسدلة بناءً على ما تم رفعه سابقاً لهذا القسم
+            updateDropdownAndTable();
+        }
+
+        // رفع وقراءة ملف الـ Excel للقسم الحالي
+        function handleSectionExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
+                // قراءة المرج الخلايا المدموجة cellStyles و cellDates
+                const workbook = XLSX.read(data, { type: 'array', cellStyles: true, cellDates: true });
                 
-                let newProjectsData = {};
+                // حفظ البيانات الخاصة بالقسم الحالي
+                sectionDataStore[currentSectionKey] = workbook;
 
-                // قراءة كل شيت داخل الـ Excel على أنه (مشروع)
-                workbook.SheetNames.forEach(sheetName => {
-                    const worksheet = workbook.Sheets[sheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    
-                    // استخراج الصفوف مع تخطي هيدر الجدول (Row 0)
-                    let contractsList = [];
-                    for (let i = 1; i < jsonData.length; i++) {
-                        const row = jsonData[i];
-                        if (row && row.length > 0) {
-                            contractsList.push({
-                                id: row[0] || i,
-                                subject: row[1] || "",
-                                link: row[7] || "#", // يمكن وضع رابط الملف في العمود رقم 8 مثلاً
-                                party1: row[2] || "",
-                                party2: row[3] || "",
-                                duration: row[4] || "",
-                                notes: row[5] || "",
-                                signDate: row[6] || ""
-                            });
-                        }
-                    }
-                    if (contractsList.length > 0) {
-                        newProjectsData[sheetName] = contractsList;
-                    }
-                });
-
-                if (Object.keys(newProjectsData).length > 0) {
-                    projectsData = newProjectsData;
-                    populateProjectDropdown();
-                    alert("تم قراءة واستيراد جميع شيتات المشاريع والعقود بنجاح!");
-                } else {
-                    alert("تعذر قراءة بيانات الجدول من الشيتات، برجاء التأكد من التنسيق.");
-                }
+                alert(`تم استيراد شيتات ملف الـ Excel لقسم (${currentSectionName}) بنجاح!`);
+                updateDropdownAndTable();
             };
             reader.readAsArrayBuffer(file);
         }
 
-        // 2. تعبئة قائمة اختيار المشاريع
-        function populateProjectDropdown() {
+        // تحديث القائمة المنسدلة للشيتات والجدول
+        function updateDropdownAndTable() {
+            const workbook = sectionDataStore[currentSectionKey];
             const select = document.getElementById('projectSelect');
             select.innerHTML = '';
-            
-            const projectNames = Object.keys(projectsData);
-            projectNames.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                select.appendChild(option);
-            });
 
-            if (projectNames.length > 0) {
-                changeProject(projectNames[0]);
-            }
-        }
-
-        // 3. تغيير عرض الجدول حسب المشروع المختار
-        function changeProject(projectName) {
-            currentProjectName = projectName;
-            document.getElementById('projectDisplayTitle').innerText = projectName;
-            
-            const contracts = projectsData[projectName] || [];
-            const tbody = document.getElementById('contractsTableBody');
-            tbody.innerHTML = '';
-
-            if (contracts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="padding:20px; color:var(--gold-light);">لا توجد عقود مسجلة لهذا المشروع</td></tr>`;
+            if (!workbook) {
+                select.innerHTML = '<option value="">-- لم يتم رفع ملف لهذا القسم بعد --</option>';
+                document.getElementById('tableContainer').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--gold-light);">
+                        <i class="fa-solid fa-file-excel" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                        <p>لا يوجد ملف مرفوع لقسم (${currentSectionName}) حتى الآن.</p>
+                    </div>`;
+                document.getElementById('currentProjectSubtitle').innerText = "يرجى رفع ملف Excel للقسم";
                 return;
             }
 
-            contracts.forEach((contract, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-weight:bold; color:var(--gold-primary);">${contract.id || (index + 1)}</td>
-                    <td style="text-align: right;">
-                        <a href="${contract.link}" target="_blank" class="contract-link">
-                            ${contract.subject}
-                        </a>
-                    </td>
-                    <td>${contract.party1}</td>
-                    <td>${contract.party2}</td>
-                    <td>${contract.duration}</td>
-                    <td style="color:${contract.notes.includes('محضر') ? '#64B5F6' : 'inherit'}">${contract.notes}</td>
-                    <td>${contract.signDate}</td>
-                `;
-                tbody.appendChild(tr);
+            // إضافة أسماء الشيتات للمنسدلة
+            workbook.SheetNames.forEach(sheetName => {
+                const option = document.createElement('option');
+                option.value = sheetName;
+                option.textContent = sheetName;
+                select.appendChild(option);
             });
+
+            // عرض الشيت الأول فوراً
+            renderCurrentSheet(workbook.SheetNames[0]);
         }
 
-        // التشغيل المبدئي عند فتح الصفحة
-        populateProjectDropdown();
+        // تحويل شيت Excel إلى جدول HTML يحافظ على الخلايا المدموجة (Merge)
+        function renderCurrentSheet(sheetName) {
+            const workbook = sectionDataStore[currentSectionKey];
+            if (!workbook || !sheetName) return;
+
+            const worksheet = workbook.Sheets[sheetName];
+            
+            // تحويل الشيت المختار إلى HTML مع التضمين المباشر لخاصية merge cells (Rowspan & Colspan)
+            let htmlTable = XLSX.utils.sheet_to_html(worksheet, { id: 'excelTableGenerated', editable: false });
+
+            const container = document.getElementById('tableContainer');
+            container.innerHTML = htmlTable;
+
+            // تنسيق الجدول الناتج تلقائياً ليتوافق مع التصميم
+            const tableElement = document.getElementById('excelTableGenerated');
+            if (tableElement) {
+                tableElement.className = 'excel-table';
+                
+                // تحويل أي نصوص تبدأ بـ http إلى روابط تفاعلية تلقائياً
+                const cells = tableElement.querySelectorAll('td');
+                cells.forEach(td => {
+                    let text = td.innerText.trim();
+                    if (text.startsWith('http://') || text.startsWith('https://')) {
+                        td.innerHTML = `<a href="${text}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> عرض المستند</a>`;
+                    }
+                });
+            }
+
+            document.getElementById('currentProjectSubtitle').innerText = `المشروع الحالي: ${sheetName}`;
+        }
     </script>
 </body>
 </html>
