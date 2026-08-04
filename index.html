@@ -11,57 +11,90 @@
     font-weight: 300;
 }
 
-/* خلفية الصفحة الرئيسية */
+/* خلفية الصفحة كاملة باللون الأسود */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Gamila Arabic', sans-serif;
-    background-color: #f8f9fa; /* خلفية فاتحة فاخرة */
-    color: #2b2b2b;
+    background-color: #0d0d0d; /* أسود داكن فخم */
+    color: #ffffff;
+    direction: rtl; /* لضمان ضبط الاتجاه العربي */
 }
 
-/* التنسيق العام للمحتوى Upper Section */
+/* الهيدر العلوي ويحتوي على زر الإضافة في اليمين */
+.header-bar {
+    width: 100%;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start; /* يضع الزر في اليمين مباشرة */
+    align-items: center;
+}
+
+/* تصميم زر الإضافة الفاخر */
+.add-btn {
+    background-color: #c5a059; /* لون ذهبي */
+    color: #0d0d0d;
+    font-family: 'Gamila Arabic', sans-serif;
+    font-weight: bold;
+    font-size: 0.95rem;
+    padding: 10px 24px;
+    border: 1px solid #c5a059;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+    background-color: transparent;
+    color: #c5a059; /* ينعكس اللون عند التمرير */
+}
+
+/* المساحة الرئيسية للمحتوى */
 .main-container {
-    min-height: 82vh;
+    min-height: 72vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 40px 20px;
+    padding: 20px;
 }
 
 .main-title {
     font-weight: bold;
     font-size: 2.8rem;
-    color: #1a1a1a;
+    color: #ffffff;
     margin-bottom: 15px;
 }
 
 .sub-title {
     font-weight: 300;
     font-size: 1.2rem;
-    color: #c5a059; /* لون ذهبي مكتوم */
+    color: #c5a059; /* ذهبي مكتوم للنص الفرعي */
     max-width: 600px;
 }
 
-/* الشريط الأسفل بخلفية سوداء Dark Footer */
+/* الشريط الأسفل (Dark Footer) */
 .bottom-bar {
-    height: 18vh;
-    background-color: #111111; /* خلفية سوداء */
-    color: #ffffff;
+    height: 12vh;
+    background-color: #050505; /* أسود أعمق للفصل البصري */
+    color: #a0a0a0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 50px;
-    border-top: 2px solid #c5a059; /* خط فاصل ذهبي رفيع */
+    padding: 0 40px;
+    border-top: 1px solid #222222; /* خط فاصل رمادي خفيف */
+    font-weight: 300;
+    font-size: 0.9rem;
 }
 
 .bottom-bar a {
     color: #c5a059;
     text-decoration: none;
-    font-weight: 300;
-    font-size: 1rem;
     transition: color 0.3s ease;
 }
 
