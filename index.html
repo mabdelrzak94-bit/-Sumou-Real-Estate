@@ -436,39 +436,3 @@
     </script>
 </body>
 </html>
-
-/* لون هيدر الجدول (الصف الأول) */
-.excel-table tr:first-child td, .excel-table tr:first-child th {
-    background: #A39263 !important; /* اللون الذهبي */
-    color: #000000 !important;      /* لون النص أسود */
-    font-size: 1.1rem;               /* حجم الخط */
-    font-weight: bold;
-}
-
-/* لون الصفوف الزوجية لتسهيل القراءة */
-.excel-table tr:nth-child(even) td {
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
-/* تأثير التمرير بالماوس على الصف */
-.excel-table tr:hover td {
-    background-color: rgba(163, 146, 99, 0.15);
-}
-.excel-table a, .hyperlink-btn {
-    background-color: rgba(100, 181, 246, 0.1);
-    border: 1px solid #64B5F6;
-    padding: 5px 12px;
-    border-radius: 6px;
-    color: #64B5F6 !important;
-    text-decoration: none !important;
-    font-size: 0.85rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s ease-in-out;
-}
-
-.excel-table a:hover, .hyperlink-btn:hover {
-    background-color: #64B5F6;
-    color: #000000 !important;
-}
