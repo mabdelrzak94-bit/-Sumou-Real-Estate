@@ -1,103 +1,164 @@
-/* استدعاء خط Gamila Arabic */
-@font-face {
-    font-family: 'Gamila Arabic';
-    src: url('GamilaArabic-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شركة سمو العقارية</title>
+    <style>
+        /* 1. استدعاء خط Gamila Arabic */
+        @font-face {
+            font-family: 'Gamila Arabic';
+            src: url('GamilaArabic-Bold.ttf') format('truetype');
+            font-weight: bold;
+        }
 
-@font-face {
-    font-family: 'Gamila Arabic';
-    src: url('GamilaArabic-Light.ttf') format('truetype');
-    font-weight: 300;
-}
+        @font-face {
+            font-family: 'Gamila Arabic';
+            src: url('GamilaArabic-Light.ttf') format('truetype');
+            font-weight: 300;
+        }
 
-/* خلفية الصفحة كاملة باللون الأسود */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Gamila Arabic', sans-serif;
-    background-color: #0d0d0d; /* أسود داكن فخم */
-    color: #ffffff;
-    direction: rtl; /* لضمان ضبط الاتجاه العربي */
-}
+        /* 2. الإعدادات العامة والخلفية */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-/* الهيدر العلوي ويحتوي على زر الإضافة في اليمين */
-.header-bar {
-    width: 100%;
-    padding: 20px 40px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: flex-start; /* يضع الزر في اليمين مباشرة */
-    align-items: center;
-}
+        body {
+            font-family: 'Gamila Arabic', sans-serif;
+            background-color: #141214; /* اللون الأسود الفاخر المرفق */
+            color: #ffffff;            /* اللون الأبيض */
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-/* تصميم زر الإضافة الفاخر */
-.add-btn {
-    background-color: #c5a059; /* لون ذهبي */
-    color: #0d0d0d;
-    font-family: 'Gamila Arabic', sans-serif;
-    font-weight: bold;
-    font-size: 0.95rem;
-    padding: 10px 24px;
-    border: 1px solid #c5a059;
-    border-radius: 6px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-}
+        /* 3. الهيدر العلوي وزر الإضافة (أعلى اليمين) */
+        .header-bar {
+            width: 100%;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: flex-start; /* وضع الزر في أعلى اليمين */
+            align-items: center;
+        }
 
-.add-btn:hover {
-    background-color: transparent;
-    color: #c5a059; /* ينعكس اللون عند التمرير */
-}
+        .add-btn {
+            background-color: #A39263; /* اللون الذهبي الأول */
+            color: #000000;            /* نص أسود صريح */
+            font-family: 'Gamila Arabic', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 12px 26px;
+            border: 1px solid #A39161;  /* اللون الذهبي الداكن */
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
 
-/* المساحة الرئيسية للمحتوى */
-.main-container {
-    min-height: 72vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-}
+        .add-btn:hover {
+            background-color: #B4A583; /* اللون الذهبي الفاتح عند التمرير */
+            border-color: #B4A583;
+            color: #141214;
+            transform: translateY(-2px);
+        }
 
-.main-title {
-    font-weight: bold;
-    font-size: 2.8rem;
-    color: #ffffff;
-    margin-bottom: 15px;
-}
+        /* 4. المحتوى الرئيسي في المنتصف */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
 
-.sub-title {
-    font-weight: 300;
-    font-size: 1.2rem;
-    color: #c5a059; /* ذهبي مكتوم للنص الفرعي */
-    max-width: 600px;
-}
+        .company-badge {
+            color: #A39161;
+            font-weight: 300;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
 
-/* الشريط الأسفل (Dark Footer) */
-.bottom-bar {
-    height: 12vh;
-    background-color: #050505; /* أسود أعمق للفصل البصري */
-    color: #a0a0a0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 40px;
-    border-top: 1px solid #222222; /* خط فاصل رمادي خفيف */
-    font-weight: 300;
-    font-size: 0.9rem;
-}
+        .main-title {
+            font-weight: bold;
+            font-size: 3rem;
+            color: #ffffff; /* الأبيض */
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
 
-.bottom-bar a {
-    color: #c5a059;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+        .sub-title {
+            font-weight: 300;
+            font-size: 1.25rem;
+            color: #B4A583; /* الذهبي الفاتح المرفق */
+            max-width: 650px;
+            line-height: 1.6;
+        }
 
-.bottom-bar a:hover {
-    color: #ffffff;
-}
+        .divider {
+            width: 80px;
+            height: 2px;
+            background-color: #A39263;
+            margin: 25px 0;
+        }
+
+        /* 5. الشريط الأسفل (Footer) */
+        .bottom-bar {
+            background-color: #000000; /* الأسود الصريح لتمييز الشريط */
+            color: #B4A583;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-top: 1px solid #A39161; /* خط فاصل بلون ذهبي */
+            font-weight: 300;
+            font-size: 0.95rem;
+        }
+
+        .bottom-bar a {
+            color: #A39263;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .bottom-bar a:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الجزء العلوي: زر الإضافة على اليمين -->
+    <header class="header-bar">
+        <button class="add-btn">
+            <span>+</span> إضافة عقار
+        </button>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-container">
+        <span class="company-badge">شركة سمو العقارية</span>
+        <h1 class="main-title">السمو في عالم التطوير</h1>
+        <div class="divider"></div>
+        <p class="sub-title">نبتكر مجتمعات عمرانية حديثة تتماشى مع تطلعات المستقبل وتجسد الفخامة الهندسية</p>
+    </main>
+
+    <!-- الشريط الأسفل -->
+    <footer class="bottom-bar">
+        <div>جميع الحقوق محفوظة © سمو العقارية</div>
+        <div>
+            <a href="https://sumou.com.sa" target="_blank">www.sumou.com.sa</a>
+        </div>
+    </footer>
+
+</body>
+</html>
