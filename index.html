@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة إدارة المشاريع | شركة سمو العقارية</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- مكتبة قراءة ملفات Excel وقراءة الخلايا المدموجة Merge Cells -->
+    <!-- مكتبة Excel متطورة لاستخراج الروابط المدموجة Hyperlinks والدمج Merge Cells -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -35,7 +35,7 @@
             min-height: 100vh;
         }
 
-        /* القائمة الجانبية Sidebar */
+        /* القائمة الجانبية */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
@@ -186,7 +186,7 @@
             font-size: 1.4rem;
         }
 
-        /* تصميم الجدول للبيانات والدمج */
+        /* تصميم الجدول والتوضيح الداكن */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -209,21 +209,34 @@
             padding: 12px 10px;
             color: var(--text-white);
             vertical-align: middle;
+            line-height: 1.5;
         }
 
         .excel-table tr:first-child td, .excel-table tr:first-child th {
-            background: var(--gold-primary);
-            color: var(--pure-black);
-            font-weight: bold;
+            background: var(--gold-primary) !important;
+            color: var(--pure-black) !important;
+            font-weight: bold !important;
+            font-size: 1rem;
         }
 
-        .excel-table a {
-            color: #64B5F6;
+        .excel-table tr:nth-child(even) td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* تنسيق الهايبر لينك (Hyperlinks) التفصيلية */
+        .excel-table a, .hyperlink-btn {
+            color: #64B5F6 !important;
             text-decoration: underline;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .excel-table a:hover {
-            color: var(--gold-light);
+        .excel-table a:hover, .hyperlink-btn:hover {
+            color: var(--gold-light) !important;
+            text-decoration: none;
         }
 
         @media (max-width: 768px) {
@@ -235,7 +248,7 @@
 </head>
 <body>
 
-    <!-- القائمة الجانبية مع الأقسام الكاملة -->
+    <!-- القائمة الجانبية -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <h2>سمو العقارية</h2>
@@ -278,7 +291,6 @@
         
         <!-- شريط التحكم العلوي -->
         <header class="top-bar">
-            <!-- قائمة تصفية الشيتات / المشاريع داخل القسم -->
             <div class="project-select-container">
                 <label for="projectSelect"><i class="fa-solid fa-building"></i> المشروع / الشيت:</label>
                 <select id="projectSelect" class="project-select" onchange="renderCurrentSheet(this.value)">
@@ -286,7 +298,6 @@
                 </select>
             </div>
 
-            <!-- زر رفع شيت الإكسل المخصص للقسم الحالي -->
             <label for="excelInput" class="excel-upload-btn">
                 <i class="fa-solid fa-file-excel"></i>
                 <span id="uploadBtnText">رفع Excel لقسم العقود</span>
@@ -294,55 +305,44 @@
             <input type="file" id="excelInput" accept=".xlsx, .xls" onchange="handleSectionExcelUpload(event)">
         </header>
 
-        <!-- الهيدر الخاص بالقسم والمشروع -->
+        <!-- العنوان الرئيسي -->
         <div class="section-header-title">
             <h3 id="currentSectionDisplayTitle">قسم العقود</h3>
             <span id="currentProjectSubtitle" style="color: var(--gold-light); font-size: 0.9rem;"><i class="fa-solid fa-table"></i> لعرض البيانات قم برفع شيت Excel الخاص بالقسم</span>
         </div>
 
-        <!-- جدول Excel مع تحويل المرج والدمج تلقائياً HTML -->
+        <!-- الجدول الديناميكي المزود بالروابط وتجهيز البيانات -->
         <div class="table-responsive" id="tableContainer">
             <div style="text-align: center; padding: 40px; color: var(--gold-light);">
                 <i class="fa-solid fa-file-excel" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
-                <p>يرجى اختيار ملف Excel للرفع، وسيتم بناء الجدول والدمج تلقائياً بنفس نسق الشيتات.</p>
+                <p>قم برفع ملف Excel، وسيقوم النظام بتنظيف البيانات واستخراج الروابط المدموجة تلقائياً.</p>
             </div>
         </div>
 
     </main>
 
     <script>
-        // تخزين بيانات الملفات المرفوعة لكل قسم على حدة
         let sectionDataStore = {
-            contracts: null,
-            invoices: null,
-            bank_guarantees: null,
-            title_deeds: null,
-            wafi: null,
-            masterplan: null,
-            reports: null
+            contracts: null, invoices: null, bank_guarantees: null,
+            title_deeds: null, wafi: null, masterplan: null, reports: null
         };
 
         let currentSectionKey = 'contracts';
         let currentSectionName = 'قسم العقود';
 
-        // التنقل بين الأقسام الجانبية
         function switchSection(key, name, element) {
             currentSectionKey = key;
             currentSectionName = name;
 
-            // تحديث التحديد في المنيو الجانبي
             document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
             if(element) element.classList.add('active');
 
-            // تحديث العناوين والأزرار
             document.getElementById('currentSectionDisplayTitle').innerText = name;
             document.getElementById('uploadBtnText').innerText = `رفع Excel لـ (${name})`;
 
-            // تحديث القائمة المنسدلة بناءً على ما تم رفعه سابقاً لهذا القسم
             updateDropdownAndTable();
         }
 
-        // رفع وقراءة ملف الـ Excel للقسم الحالي
         function handleSectionExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -350,19 +350,17 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const data = new Uint8Array(e.target.result);
-                // قراءة المرج الخلايا المدموجة cellStyles و cellDates
-                const workbook = XLSX.read(data, { type: 'array', cellStyles: true, cellDates: true });
+                // تفعيل استخراج الروابط والخلية المدمجة
+                const workbook = XLSX.read(data, { type: 'array', cellStyles: true, cellDates: true, cellFormula: true, cellNF: true });
                 
-                // حفظ البيانات الخاصة بالقسم الحالي
                 sectionDataStore[currentSectionKey] = workbook;
 
-                alert(`تم استيراد شيتات ملف الـ Excel لقسم (${currentSectionName}) بنجاح!`);
+                alert(`تم رفع الملف وتنظيف البيانات واستخراج الروابط لشيتات (${currentSectionName}) بنجاح!`);
                 updateDropdownAndTable();
             };
             reader.readAsArrayBuffer(file);
         }
 
-        // تحديث القائمة المنسدلة للشيتات والجدول
         function updateDropdownAndTable() {
             const workbook = sectionDataStore[currentSectionKey];
             const select = document.getElementById('projectSelect');
@@ -379,7 +377,6 @@
                 return;
             }
 
-            // إضافة أسماء الشيتات للمنسدلة
             workbook.SheetNames.forEach(sheetName => {
                 const option = document.createElement('option');
                 option.value = sheetName;
@@ -387,34 +384,49 @@
                 select.appendChild(option);
             });
 
-            // عرض الشيت الأول فوراً
             renderCurrentSheet(workbook.SheetNames[0]);
         }
 
-        // تحويل شيت Excel إلى جدول HTML يحافظ على الخلايا المدموجة (Merge)
+        // تحويل البيانات وتنظيفها مع تفعيل فتح الملف بـ Hyperlink
         function renderCurrentSheet(sheetName) {
             const workbook = sectionDataStore[currentSectionKey];
             if (!workbook || !sheetName) return;
 
             const worksheet = workbook.Sheets[sheetName];
-            
-            // تحويل الشيت المختار إلى HTML مع التضمين المباشر لخاصية merge cells (Rowspan & Colspan)
-            let htmlTable = XLSX.utils.sheet_to_html(worksheet, { id: 'excelTableGenerated', editable: false });
 
+            // 1. استخراج الروابط المخفية المدموجة (Hyperlinks) من داخل خلايا الـ Excel
+            for (let cellAddress in worksheet) {
+                if (cellAddress[0] === '!') continue;
+                const cell = worksheet[cellAddress];
+                if (cell && cell.l && cell.l.Target) {
+                    // تحويل قيمة الخلية إلى رابط ذكي
+                    cell.v = `<a href="${cell.l.Target}" target="_blank" class="hyperlink-btn"><i class="fa-solid fa-up-right-from-square"></i> ${cell.v || 'عرض المستند'}</a>`;
+                    cell.t = 's';
+                }
+            }
+
+            // 2. تحويل الشيت إلى جدول HTML
+            let htmlTable = XLSX.utils.sheet_to_html(worksheet, { id: 'excelTableGenerated', editable: false });
             const container = document.getElementById('tableContainer');
             container.innerHTML = htmlTable;
 
-            // تنسيق الجدول الناتج تلقائياً ليتوافق مع التصميم
             const tableElement = document.getElementById('excelTableGenerated');
             if (tableElement) {
                 tableElement.className = 'excel-table';
                 
-                // تحويل أي نصوص تبدأ بـ http إلى روابط تفاعلية تلقائياً
+                // 3. تنظيف البيانات (Data Cleaning) وتنسيق العرض
                 const cells = tableElement.querySelectorAll('td');
                 cells.forEach(td => {
-                    let text = td.innerText.trim();
-                    if (text.startsWith('http://') || text.startsWith('https://')) {
-                        td.innerHTML = `<a href="${text}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> عرض المستند</a>`;
+                    let rawText = td.innerText.trim();
+
+                    // تحويل أي رابط نصي صريح إلى Hyperlink
+                    if (rawText.startsWith('http://') || rawText.startsWith('https://')) {
+                        td.innerHTML = `<a href="${rawText}" target="_blank" class="hyperlink-btn"><i class="fa-solid fa-up-right-from-square"></i> فتح المستند</a>`;
+                    }
+                    
+                    // تنظيف وإصلاح تنسيق التواريخ التي تأتي كأرقام أو نصوص مشوهة
+                    if (td.innerHTML.includes('&amp;')) {
+                        td.innerHTML = td.innerHTML.replace(/&amp;/g, '&');
                     }
                 });
             }
