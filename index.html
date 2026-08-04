@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة إدارة المشاريع العقارية | Real Estate Dashboard</title>
+    <title>بوابة إدارة المشاريع | شركة سمو العقارية</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1b365d;
-            --accent-color: #c5a059;
-            --bg-color: #f4f7f9;
+            /* ألوان شركة سمو العقارية الهندسية والرسمية */
+            --sumou-navy: #0f223d;
+            --sumou-gold: #c5a059;
+            --sumou-gold-hover: #b08c46;
+            --bg-light: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #2c3e50;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --sidebar-width: 280px;
         }
 
         * {
@@ -22,344 +27,434 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
         }
 
-        header {
-            text-align: center;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, var(--primary-color), #0b1a30);
+        /* القائمة الجانبية المنسدلة Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sumou-navy);
             color: white;
-            border-radius: 16px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        header p {
-            color: var(--accent-color);
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .sections-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .icon-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-            border-color: var(--accent-color);
-        }
-
-        .icon-card i {
-            font-size: 2.8rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            transition: color 0.3s;
-        }
-
-        .icon-card:hover i {
-            color: var(--accent-color);
-        }
-
-        .icon-card h3 {
-            font-size: 1.2rem;
-            color: var(--primary-color);
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
             position: fixed;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            bottom: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 700px;
-            border-radius: 16px;
-            padding: 30px;
-            position: relative;
-            max-height: 85vh;
+        .sidebar-header {
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.15);
+        }
+
+        .sidebar-header h2 {
+            color: var(--sumou-gold);
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 10px;
             overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #a0aec0;
-        }
-
-        .close-btn:hover {
-            color: #e53e3e;
-        }
-
-        .modal-header {
+        .menu-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #edf2f7;
+            padding: 12px 15px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
         }
 
-        .modal-header i {
-            font-size: 2rem;
-            color: var(--accent-color);
+        .menu-item:hover, .menu-item.active {
+            background: rgba(197, 160, 89, 0.15);
+            color: var(--sumou-gold);
+            border-right: 4px solid var(--sumou-gold);
         }
 
-        .file-list {
-            list-style: none;
+        .menu-item i {
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
         }
 
-        .file-item {
+        /* المحتوى الرئيسي */
+        .main-content {
+            margin-right: var(--sidebar-width);
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* شريط البحث العلوي المميز */
+        .top-bar {
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            background: #f8fafc;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            border-right: 4px solid var(--primary-color);
-            transition: background 0.2s;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #f8fafc;
         }
 
-        .file-item:hover {
-            background: #edf2f7;
+        .search-box input:focus {
+            border-color: var(--sumou-gold);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
         }
 
-        .file-info {
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--sumou-navy);
             display: flex;
             align-items: center;
             gap: 10px;
+            border-bottom: 2px solid var(--sumou-gold);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
-        .file-info i {
-            color: #718096;
+        /* كروت المستندات والملفات */
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
         }
 
-        .btn-link {
-            background: var(--primary-color);
+        .file-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .file-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(15, 34, 61, 0.08);
+            border-color: var(--sumou-gold);
+        }
+
+        .file-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .file-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(15, 34, 61, 0.05);
+            color: var(--sumou-navy);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .file-info h4 {
+            font-size: 1rem;
+            color: var(--sumou-navy);
+            margin-bottom: 4px;
+        }
+
+        .file-info span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .btn-view {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--sumou-navy);
             color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
             text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
             font-size: 0.9rem;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: background 0.2s ease;
+            width: 100%;
         }
 
-        .btn-link:hover {
-            background: var(--accent-color);
+        .btn-view:hover {
+            background: var(--sumou-gold);
+            color: white;
+        }
+
+        /* رسالة عدم وجود نتائج */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar-header h2, .sidebar-header p, .menu-item span {
+                display: none;
+            }
+            .main-content {
+                margin-right: 70px;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>منصة إدارة المشاريع العقارية</h1>
-        <p>لوحة التحكم التنفيذية والملفات المعتمدة</p>
-    </header>
-
-    <div class="sections-grid">
-        <div class="icon-card" onclick="openSection('contracts')">
-            <i class="fa-solid fa-file-contract"></i>
-            <h3>العقود</h3>
+    <!-- القائمة الجانبية Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>سمو العقارية</h2>
+            <p>منصة إدارة المشاريع</p>
         </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item active" onclick="filterSection('all', this)">
+                <i class="fa-solid fa-border-all"></i>
+                <span>جميع الأقسام</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('contracts', this)">
+                <i class="fa-solid fa-file-contract"></i>
+                <span>العقود</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('invoices', this)">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>المستخلصات</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('analysis', this)">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>التحليل الفني والمالي</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('wafi', this)">
+                <i class="fa-solid fa-certificate"></i>
+                <span>رخص البيع على الخارطة</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('masterplan', this)">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>المخطط العام المعتمد</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('monthly_reports', this)">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>التقارير الشهرية</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('executive_summary', this)">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>الملخص التنفيذي</span>
+            </li>
+            <li class="menu-item" onclick="filterSection('progress', this)">
+                <i class="fa-solid fa-bars-progress"></i>
+                <span>نسب الإنجاز الشهرية</span>
+            </li>
+        </ul>
+    </aside>
 
-        <div class="icon-card" onclick="openSection('invoices')">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-            <h3>المستخلصات</h3>
-        </div>
-
-        <div class="icon-card" onclick="openSection('analysis')">
-            <i class="fa-solid fa-chart-line"></i>
-            <h3>التحليل الفني والمالي</h3>
-        </div>
-
-        <div class="icon-card" onclick="openSection('wafi')">
-            <i class="fa-solid fa-certificate"></i>
-            <h3>رخص البيع على الخارطة</h3>
-        </div>
-
-        <div class="icon-card" onclick="openSection('masterplan')">
-            <i class="fa-solid fa-map-location-dot"></i>
-            <h3>المخطط العام المعتمد</h3>
-        </div>
-
-        <div class="icon-card" onclick="openSection('monthly_reports')">
-            <i class="fa-solid fa-calendar-check"></i>
-            <h3>التقارير الشهرية</h3>
-        </div>
-
-        <div class="icon-card" onclick="openSection('executive_summary')">
-            <i class="fa-solid fa-clipboard-list"></i>
-            <h3>الملخص التنفيذي</h3>
-        </div>
-
-        <div class="icon-card" onclick="openSection('progress')">
-            <i class="fa-solid fa-bars-progress"></i>
-            <h3>نسب الإنجاز الشهرية</h3>
-        </div>
-    </div>
-
-    <!-- Dynamic Modal -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div class="modal-header">
-                <i id="modal-icon" class="fa-solid"></i>
-                <h2 id="modal-title">عنوان القطاع</h2>
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        
+        <!-- شريط البحث العلوي -->
+        <header class="top-bar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" onkeyup="searchFiles()" placeholder="ابحث عن عقد، مستخلص، رخصة، تقرير، أو أي مستند...">
             </div>
-            <ul id="file-list" class="file-list">
-                <!-- Links rendered dynamically -->
-            </ul>
-        </div>
-    </div>
+        </header>
+
+        <!-- عنوان القسم والمحتوى -->
+        <section>
+            <h3 class="section-title" id="currentSectionTitle">
+                <i class="fa-solid fa-folder-open" style="color: var(--sumou-gold);"></i>
+                جميع الملفات والمستندات
+            </h3>
+
+            <div class="files-grid" id="filesGrid">
+                <!-- يتم توليد الملفات والروابط ديناميكياً -->
+            </div>
+        </section>
+
+    </main>
 
     <script>
-        const data = {
-            contracts: {
-                title: "قسم العقود",
-                icon: "fa-file-contract",
-                files: [
-                    { name: "عقد المقاول الرئيسي - مشروع الواحة", link: "#" },
-                    { name: "عقد الاستشاري الهندسي", link: "#" }
-                ]
-            },
-            invoices: {
-                title: "المستخلصات المالية",
-                icon: "fa-file-invoice-dollar",
-                files: [
-                    { name: "مستخلص رقم (12) - المقاول الرئيسي", link: "#" },
-                    { name: "دفعة الأعمال الترابية والأساسات", link: "#" }
-                ]
-            },
-            analysis: {
-                title: "التحليل الفني والمالي",
-                icon: "fa-chart-line",
-                files: [
-                    { name: "تقرير دراسة الجدوى المالية المحدثة", link: "#" },
-                    { name: "مقارنة التكاليف الفعلية بالميزانية", link: "#" }
-                ]
-            },
-            wafi: {
-                title: "رخص البيع على الخارطة (وافي)",
-                icon: "fa-certificate",
-                files: [
-                    { name: "رخصة وافي النهائية - رخصة رقم 1042", link: "#" },
-                    { name: "شهادة اعتماد حساب الإسكان", link: "#" }
-                ]
-            },
-            masterplan: {
-                title: "المخطط العام المعتمد",
-                icon: "fa-map-location-dot",
-                files: [
-                    { name: "المخطط العام المعماري (PDF High-Res)", link: "#" },
-                    { name: "اعتماد البلدية والأمانة النهائي", link: "#" }
-                ]
-            },
-            monthly_reports: {
-                title: "التقارير الشهرية",
-                icon: "fa-calendar-check",
-                files: [
-                    { name: "تقرير شهر يوليو 2026", link: "#" },
-                    { name: "تقرير شهر يونيو 2026", link: "#" }
-                ]
-            },
-            executive_summary: {
-                title: "الملخص التنفيذي",
-                icon: "fa-clipboard-list",
-                files: [
-                    { name: "عرض الإدارة العليا - الربع الثاني 2026", link: "#" }
-                ]
-            },
-            progress: {
-                title: "نسب الإنجاز الشهرية",
-                icon: "fa-bars-progress",
-                files: [
-                    { name: "جدول تقدم الأعمال الميداني (S-Curve)", link: "#" }
-                ]
-            }
-        };
-
-        function openSection(key) {
-            const section = data[key];
-            if (!section) return;
-
-            document.getElementById('modal-title').innerText = section.title;
-            document.getElementById('modal-icon').className = `fa-solid ${section.icon}`;
+        // قاعدة بيانات جميع الأقسام والملفات الخاصة بك
+        const allFiles = [
+            // العقود
+            { name: "عقد المقاول الرئيسي - مشروع المجمع السكني", category: "contracts", categoryName: "العقود", icon: "fa-file-contract", link: "#" },
+            { name: "عقد الاستشاري الهندسي العام", category: "contracts", categoryName: "العقود", icon: "fa-file-contract", link: "#" },
             
-            const listContainer = document.getElementById('file-list');
-            listContainer.innerHTML = '';
+            // المستخلصات
+            { name: "مستخلص رقم (12) - الأعمال الإنشائية", category: "invoices", categoryName: "المستخلصات", icon: "fa-file-invoice-dollar", link: "#" },
+            { name: "دفعة الأعمال الكهروميكانيكية - المستخلص 05", category: "invoices", categoryName: "المستخلصات", icon: "fa-file-invoice-dollar", link: "#" },
+            
+            // التحليل الفني والمالي
+            { name: "دراسة الجدوى المالية المحدثة للمشروع", category: "analysis", categoryName: "التحليل الفني والمالي", icon: "fa-chart-line", link: "#" },
+            { name: "تقرير التدفقات النقدية والتكاليف المباشرة", category: "analysis", categoryName: "التحليل الفني والمالي", icon: "fa-chart-line", link: "#" },
+            
+            // رخص البيع على الخارطة
+            { name: "رخصة وافي النهائية - رقم الرخصة 1042", category: "wafi", categoryName: "رخص البيع على الخارطة", icon: "fa-certificate", link: "#" },
+            { name: "شهادة فتح حساب الإسكان والضمان", category: "wafi", categoryName: "رخص البيع على الخارطة", icon: "fa-certificate", link: "#" },
+            
+            // المخطط العام المعتمد
+            { name: "المخطط المعماري المعتمد - النسخة النهائية", category: "masterplan", categoryName: "المخطط العام المعتمد", icon: "fa-map-location-dot", link: "#" },
+            { name: "اعتماد أمانة المنطقة والمرافق العامة", category: "masterplan", categoryName: "المخطط العام المعتمد", icon: "fa-map-location-dot", link: "#" },
+            
+            // التقارير الشهرية
+            { name: "التقرير الميداني الشامل - شهر يوليو 2026", category: "monthly_reports", categoryName: "التقارير الشهرية", icon: "fa-calendar-check", link: "#" },
+            { name: "تقرير تقييم المخاطر والجودة - يونيو 2026", category: "monthly_reports", categoryName: "التقارير الشهرية", icon: "fa-calendar-check", link: "#" },
+            
+            // الملخص التنفيذي
+            { name: "عرض الإدارة العليا والقيادة - الربع الثاني", category: "executive_summary", categoryName: "الملخص التنفيذي", icon: "fa-clipboard-list", link: "#" },
+            
+            // نسب الإنجاز الشهرية
+            { name: "منحنى تقدم الأعمال الميدانية (S-Curve)", category: "progress", categoryName: "نسب الإنجاز الشهرية", icon: "fa-bars-progress", link: "#" }
+        ];
 
-            section.files.forEach(file => {
-                const li = document.createElement('li');
-                li.className = 'file-item';
-                li.innerHTML = `
-                    <div class="file-info">
-                        <i class="fa-regular fa-file-pdf"></i>
-                        <span>${file.name}</span>
-                    </div>
-                    <a href="${file.link}" target="_blank" class="btn-link">فتح المستند <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.8rem; margin-right:4px;"></i></a>
-                `;
-                listContainer.appendChild(li);
-            });
+        let currentCategory = 'all';
 
-            document.getElementById('modal').style.display = 'flex';
-        }
+        // عرض الملفات حسب القسم المحدد
+        function renderFiles(files) {
+            const grid = document.getElementById('filesGrid');
+            grid.innerHTML = '';
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal');
-            if (event.target == modal) {
-                closeModal();
+            if (files.length === 0) {
+                grid.innerHTML = '<div class="no-results"><i class="fa-solid fa-magnifying-glass" style="font-size:2rem; margin-bottom:10px;"></i><p>لا توجد نتائج مطابقة للبحث</p></div>';
+                return;
             }
+
+            files.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.innerHTML = `
+                    <div class="file-header">
+                        <div class="file-icon">
+                            <i class="fa-solid ${file.icon}"></i>
+                        </div>
+                        <div class="file-info">
+                            <h4>${file.name}</h4>
+                            <span>${file.categoryName}</span>
+                        </div>
+                    </div>
+                    <a href="${file.link}" target="_blank" class="btn-view">
+                        عرض المستند
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                `;
+                grid.appendChild(card);
+            });
         }
+
+        // تصفية الأقسام من القائمة الجانبية
+        function filterSection(category, element) {
+            currentCategory = category;
+            
+            // تحديث التحديد على المنيو
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            // تحديث العنوان
+            const titles = {
+                all: "جميع الملفات والمستندات",
+                contracts: "قسم العقود",
+                invoices: "قسم المستخلصات المالية",
+                analysis: "التحليل الفني والمالي",
+                wafi: "رخص البيع على الخارطة (وافي)",
+                masterplan: "المخطط العام المعتمد",
+                monthly_reports: "التقارير الشهرية",
+                executive_summary: "الملخص التنفيذي",
+                progress: "نسب الإنجاز الشهرية"
+            };
+            document.getElementById('currentSectionTitle').innerHTML = `<i class="fa-solid fa-folder-open" style="color: var(--sumou-gold);"></i> ${titles[category]}`;
+
+            // تصفية القائمة
+            const filtered = category === 'all' ? allFiles : allFiles.filter(f => f.category === category);
+            renderFiles(filtered);
+
+            // تفريغ محرك البحث عند تغيير القسم
+            document.getElementById('searchInput').value = '';
+        }
+
+        // محرك البحث الفوري
+        function searchFiles() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            const activeSet = currentCategory === 'all' ? allFiles : allFiles.filter(f => f.category === currentCategory);
+
+            const searchResults = activeSet.filter(file => 
+                file.name.toLowerCase().includes(query) || 
+                file.categoryName.toLowerCase().includes(query)
+            );
+
+            renderFiles(searchResults);
+        }
+
+        // التشغيل المبدئي عند فتح الصفحة
+        renderFiles(allFiles);
     </script>
 </body>
 </html>
